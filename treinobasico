@@ -1,0 +1,24 @@
+import pandas as pd
+from sklearn.svm import LinearSVC
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+#URL PARA OBTER OS DADOS.
+url = 'https://gist.githubusercontent.com/guilhermesilveira/b9dd8e4b62b9e22ebcb9c8e89c271de4/raw/c69ec4b708fba03c445397b6a361db4345c83d7a/tracking.csv'
+dados = pd.read_csv(url)
+
+#TRATANDO OS DADOS PARA ANÁLISE.
+y = dados['comprou']
+x = dados[['inicial','patrocinio','palestras','contato']]
+
+SEED = 142 #DEFINE UMA KEY PARA NÃO CAUSAR ALEATORIEDADE NO TREINO/TESTE
+treino_x, teste_x, treino_y, teste_y = train_test_split(x, y, random_state = SEED, stratify = y)
+
+#MODELO
+modelo = LinearSVC()
+modelo.fit(treino_x,treino_y)
+previsao = modelo.predict(teste_x)
+
+acuracia = accuracy_score(teste_y,previsao) * 100
+
+print(f'Acertividade: {acuracia}%')
